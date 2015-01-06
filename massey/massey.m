@@ -65,16 +65,12 @@ o = r - d;
 num = 1:numteams;
 num = num';
 
-r = [num r];
-o = [num o];
-d = [num d];
-
-r = sortrows(r, -2);
-o = sortrows(o, -2);
-d = sortrows(d, -2);
+r = sortrows([num r], -2);
+o = sortrows([num o], -2);
+d = sortrows([num d], -2);
 
 function output(type, rankings, teams)
-  printf(['%s rankings: =====================================\n'], type)
+  printf('%s rankings: =====================================\n', type)
   for i = 1:rows(rankings)
     printf('%d %s %f\n', i, teams{rankings(i,1)}, rankings(i,2))
   endfor
