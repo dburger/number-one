@@ -1,6 +1,6 @@
 #!/usr/bin/env octave
 
-% Computes Massey ratings on data as downloaded
+% Computes Massey rankings on data as downloaded
 % from http://www.masseyratings.com/data.php
 % in the "Matlab Games" and "Matlab Teams" formats.
 % Team one identifier and score found in columns
@@ -52,7 +52,8 @@ endfor
 T = diag(diag(M), numteams, numteams);
 P = -1 * (M - T);
 
-% This correction forces the sum of rankings to be 0.
+% This correction forces M to have full rank
+% and the sum of ratings to be 0.
 M(numteams, :) = 1;
 p(numteams, 1) = 0;
 
