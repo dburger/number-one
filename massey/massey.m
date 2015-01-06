@@ -1,18 +1,30 @@
 #!/usr/bin/env octave
 
+% Computes Massey ratings on data as downloaded
+% from http://www.masseyratings.com/data.php
+% in the "Matlab Games" and "Matlab Teams" formats.
+% Team one identifier and score found in columns
+% 3 and 5, team two identifier and score found in
+% columns 6 and 8. Outputs overall, offensive, and
+% defensive ratings.  Example invocation:
+
 % massey.m scores.php teams.php
+
+% For detailed informaiton on the algorithm see
+% chapter two in
+% "Who's #1?: The Science of Rating and Ranking."
 
 args = argv();
 
 games = csvread(args{1});
-tmnames = textread(args{2}, '%*d,%s');
+teams = textread(args{2}, '%*d,%s');
 
-teams = max(max(games(:,3)), max(games(:,6)));
+numteams = max(max(games(:,3)), max(games(:,6)));
 
-M = zeros(teams, teams);
-f = zeros(teams, 1);
-a = zeros(teams, 1);
-p = zeros(teams, 1);
+M = zeros(numteams, numteams);
+f = zeros(numteams, 1);
+a = zeros(numteams, 1);
+p = zeros(numteams, 1);
 
 for i = 1:rows(games)
   team1 = games(i, 3);
@@ -37,18 +49,19 @@ for i = 1:rows(games)
 endfor
 
 
-T = diag(diag(M), teams, teams);
+T = diag(diag(M), numteams, numteams);
 P = -1 * (M - T);
 
-M(teams, :) = 1;
-p(teams, 1) = 0;
+% This correction forces the sum of rankings to be 0.
+M(numteams, :) = 1;
+p(numteams, 1) = 0;
 
 r = M \ p;
 
 d = (T + P) \ (T * r - f);
 o = r - d;
 
-num = 1:teams;
+num = 1:numteams;
 num = num';
 
 r = [num r];
@@ -59,17 +72,14 @@ r = sortrows(r, -2);
 o = sortrows(o, -2);
 d = sortrows(d, -2);
 
-printf("rankings: ====================\n")
-for i = 1:rows(r)
-  printf('%d %s %f\n', i, tmnames{r(i,1)}, r(i,2))
-endfor
+function output(type, rankings, teams)
+  printf(['%s rankings: =====================================\n'], type)
+  for i = 1:rows(rankings)
+    printf('%d %s %f\n', i, teams{rankings(i,1)}, rankings(i,2))
+  endfor
+  printf('\n')
+endfunction
 
-printf("offense: ====================\n")
-for i = 1:rows(o)
-  printf('%d %s %f\n', i, tmnames{o(i,1)}, o(i,2))
-endfor
-
-printf("defense: ====================\n")
-for i = 1:rows(d)
-  printf('%d %s %f\n', i, tmnames{d(i,1)}, d(i,2))
-endfor
+output('Overall', r, teams);
+output('Offense', o, teams);
+output('Defense', d, teams);
