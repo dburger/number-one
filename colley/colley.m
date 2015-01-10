@@ -60,4 +60,3 @@ printf('rankings: =====================================\n')
 for i = 1:rows(r)
   printf('%d %s %f\n', i, teams{r(i,1)}, r(i,2))
 endfor
-printf('\n')

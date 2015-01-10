@@ -74,9 +74,10 @@ function output(type, rankings, teams)
   for i = 1:rows(rankings)
     printf('%d %s %f\n', i, teams{rankings(i,1)}, rankings(i,2))
   endfor
-  printf('\n')
 endfunction
 
 output('Overall', r, teams);
+printf('\n')
 output('Offense', o, teams);
+printf('\n')
 output('Defense', d, teams);
