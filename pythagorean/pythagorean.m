@@ -26,7 +26,7 @@ args = argv();
 games = csvread(args{1});
 teams = textread(args{2}, '%*d,%s');
 
-exponent = 2.274;
+exponent = 2.37;
 
 numteams = max(max(games(:,3)), max(games(:,6)));
 
