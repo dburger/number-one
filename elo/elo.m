@@ -14,10 +14,19 @@
 % chapter five in
 % "Who's #1?: The Science of Rating and Ranking."
 
+% Note that this script uses the parameter values that
+% the Elo rankings at the 538 blog appear to use. That
+% is:
+% starting rankings: 1500
+%           epsilon:  400
+%                 K:   20
+
 % Returns the new elo rating for team1 with score1 and elo1
 % against team2 with score2 and elo2.
 function retval = newelo(score1, score2, elo1, elo2)
   diff = score1 - score2;
+  % This is a possible alternative approach to S:
+  % S = (score1 + 1) / (score1 + score2 + 2);
   if (diff > 0)
     S = 1;
   elseif (diff < 0)
@@ -25,6 +34,7 @@ function retval = newelo(score1, score2, elo1, elo2)
   else
     S = 0.5;
   endif
+  % epsilon = 400
   u = 1 / (1 + 10 ^ (-1 * (elo1 - elo2) / 400));
   % Note the K = 20 here.
   retval = elo1 + 20 * (S - u);
