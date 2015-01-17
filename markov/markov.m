@@ -31,6 +31,7 @@ for i = 1:rows(games)
   score2 = games(i, 8);
 
   % Using wins, the loser "votes for" the winner.
+  % A more advanced system would combine several stats.
   if (score1 > score2)
     S(team2, team1) += 1;
   elseif (score2 > score1)
