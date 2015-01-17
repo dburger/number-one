@@ -26,7 +26,7 @@ teams = textread(args{2}, '%*d,%s');
 
 numteams = max(max(games(:,3)), max(games(:,6)));
 
-A = zeros(numteams, numteams);
+A = zeros(numteams);
 
 for i = 1:rows(games)
   team1 = games(i, 3);
@@ -40,7 +40,7 @@ for i = 1:rows(games)
 endfor
 
 % T used as temporary matrix to calculate the adjustments.
-T = zeros(numteams, numteams);
+T = zeros(numteams);
 
 % Laplace's rule of succession adjusment.
 for i = 1:rows(A)
@@ -50,7 +50,7 @@ for i = 1:rows(A)
 endfor
 
 A = T;
-T = zeros(numteams, numteams);
+T = zeros(numteams);
 
 % Skewing adjustment.
 for i = 1:rows(A)

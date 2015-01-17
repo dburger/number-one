@@ -23,7 +23,7 @@ numteams = max(max(games(:,3)), max(games(:,6)));
 
 % In this "Masseyized Colley" we use the M of Massey
 % rather than the C of Colley.
-M = zeros(numteams, numteams);
+M = zeros(numteams);
 b = zeros(numteams, 1);
 
 for i = 1:rows(games)

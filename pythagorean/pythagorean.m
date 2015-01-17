@@ -32,7 +32,7 @@ numteams = max(max(games(:,3)), max(games(:,6)));
 
 % Store a matrix of wins, M(i, j) tracks wins for i by
 % += 1 if i beat j.
-M = zeros(numteams, numteams);
+M = zeros(numteams);
 
 % Points for and against.
 f = zeros(numteams, 1);

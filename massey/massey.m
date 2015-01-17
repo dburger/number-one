@@ -21,7 +21,7 @@ teams = textread(args{2}, '%*d,%s');
 
 numteams = max(max(games(:,3)), max(games(:,6)));
 
-M = zeros(numteams, numteams);
+M = zeros(numteams);
 f = zeros(numteams, 1);
 a = zeros(numteams, 1);
 p = zeros(numteams, 1);

@@ -52,12 +52,12 @@ endfor
 
 % To force stochasticity can introduce "teleportation matrix.
 % Here beta = .5 as suggested for NCAA basketball.
-S = 0.5 * S + (1 - 0.5) / numteams * ones(numteams, numteams);
+S = 0.5 * S + (1 - 0.5) / numteams * ones(numteams);
 
 % Need to compute "stationary vector"  or "dominant eigenvector" of
 % S. This is stolen from
 % http://stackoverflow.com/questions/16888303/dtmc-markov-chain-how-to-get-the-stationary-vector
-r = [S' - eye(numteams, numteams); ones(1, numteams)] \ [zeros(numteams, 1); 1];
+r = [S' - eye(numteams); ones(1, numteams)] \ [zeros(numteams, 1); 1];
 
 num = 1:numteams;
 num = num';
