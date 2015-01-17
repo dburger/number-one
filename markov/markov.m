@@ -31,14 +31,30 @@ for i = 1:rows(games)
   score2 = games(i, 8);
 
   % Using points allowed.
-  S(team1, team2) = score2;
-  S(team2, team1) = score1;
+  S(team1, team2) += score2;
+  S(team2, team1) += score1;
 endfor
 
 for i = 1:rows(S)
   S(i, :) *= 1 / sum(S(i, :));
 endfor
 
+% To force stochasticity can introduce "teleportation matrix.
+% Here beta = .5 as suggested for NCAA basketball.
+% S = 0.5 * S + (1 - 0.5) / numteams * ones(numteams, numteams);
+
 % Need to compute "stationary vector"  or "dominant eigenvector" of
-% S.
-S
+% S. This is stolen from
+% http://stackoverflow.com/questions/16888303/dtmc-markov-chain-how-to-get-the-stationary-vector
+r = [S' - eye(numteams, numteams); ones(1, numteams)] \ [zeros(numteams, 1); 1];
+
+num = 1:numteams;
+num = num';
+
+r = sortrows([num r], -2);
+
+printf('rankings: =====================================\n')
+for i = 1:rows(r)
+  printf('%d %s %f\n', i, teams{r(i,1)}, r(i,2))
+endfor
+
