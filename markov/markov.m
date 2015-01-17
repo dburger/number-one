@@ -30,18 +30,28 @@ for i = 1:rows(games)
   score1 = games(i, 5);
   score2 = games(i, 8);
 
-  % Using points allowed.
-  S(team1, team2) += score2;
-  S(team2, team1) += score1;
+  % Using wins, the loser "votes for" the winner.
+  if (score1 > score2)
+    S(team2, team1) += 1;
+  elseif (score2 > score1)
+    S(team1, team2) += 1;
+  else
+    S(team2, team1) += 0.5;
+    S(team1, team2) += 0.5;
+  endif
 endfor
 
+% Normalize the rows.
 for i = 1:rows(S)
-  S(i, :) *= 1 / sum(S(i, :));
+  t = sum(S(i, :));
+  if (t > 0)
+    S(i, :) *= 1 / t;
+  endif
 endfor
 
 % To force stochasticity can introduce "teleportation matrix.
 % Here beta = .5 as suggested for NCAA basketball.
-% S = 0.5 * S + (1 - 0.5) / numteams * ones(numteams, numteams);
+S = 0.5 * S + (1 - 0.5) / numteams * ones(numteams, numteams);
 
 % Need to compute "stationary vector"  or "dominant eigenvector" of
 % S. This is stolen from
@@ -57,4 +67,3 @@ printf('rankings: =====================================\n')
 for i = 1:rows(r)
   printf('%d %s %f\n', i, teams{r(i,1)}, r(i,2))
 endfor
-
