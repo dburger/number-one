@@ -22,8 +22,8 @@ teams = textread(args{2}, '%*d,%s');
 
 numteams = max(max(games(:,3)), max(games(:,6)));
 
-numgames = zeros(numteams, numteams);
-scores = zeros(numteams, numteams);
+numgames = zeros(numteams);
+scores = zeros(numteams);
 
 for i = 1:rows(games)
   team1 = games(i, 3);
@@ -43,6 +43,10 @@ endfor
 % Change the cumulative scores to averages per game.
 A = scores ./ numgames;
 A(isnan(A)) = 0;
+
+% Ensure total support here.
+epsilon = 0.001
+A = A + epsilon * (ones(numteams) - eye(numteams))
 
 % Calculate the defensive ratings, how many times to converge?
 d = ones(numteams, 1);
@@ -73,3 +77,7 @@ printf('\n')
 output('Offense', o, teams);
 printf('\n')
 output('Defense', d, teams);
+
+% Book proposes building regression models in the form of:
+% alpha(o1 - o2) + beta(d1 - d2) = s1 - s2
+% from these offensives and defensive ratings, go nuts.
