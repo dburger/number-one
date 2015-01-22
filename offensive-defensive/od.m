@@ -45,8 +45,8 @@ A = scores ./ numgames;
 A(isnan(A)) = 0;
 
 % Ensure total support here.
-epsilon = 0.001
-A = A + epsilon * (ones(numteams) - eye(numteams))
+epsilon = 0.001;
+A = A + epsilon * (ones(numteams) - eye(numteams));
 
 % Calculate the defensive ratings, how many times to converge?
 d = ones(numteams, 1);
