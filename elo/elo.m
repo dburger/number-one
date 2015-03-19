@@ -17,9 +17,21 @@
 % Note that this script uses the parameter values that
 % the Elo rankings at the 538 blog appear to use. That
 % is:
-% starting rankings: 1500
-%           epsilon:  400
-%                 K:   20
+% starting ratings: 1500
+%          epsilon:  400
+%                K:   20
+
+function retval = STARTING_RATING()
+  retval = 1500;
+endfunction
+
+function retval = EPSILON()
+  retval = 400;
+endfunction
+
+function retval = K()
+  retval = 20;
+endfunction
 
 % Returns the new elo rating for team1 with score1 and elo1
 % against team2 with score2 and elo2.
@@ -35,9 +47,9 @@ function retval = newelo(score1, score2, elo1, elo2)
     S = 0.5;
   endif
   % epsilon = 400
-  u = 1 / (1 + 10 ^ (-1 * (elo1 - elo2) / 400));
+  u = 1 / (1 + 10 ^ (-1 * (elo1 - elo2) / EPSILON()));
   % Note the K = 20 here.
-  retval = elo1 + 20 * (S - u);
+  retval = elo1 + K() * (S - u);
 endfunction
 
 args = argv();
@@ -48,7 +60,7 @@ teams = textread(args{2}, '%*d,%s');
 numteams = max(max(games(:,3)), max(games(:,6)));
 
 % Start every team with a rating of 1500.
-elos = 1500 * ones(numteams, 1);
+elos = STARTING_RATING() * ones(numteams, 1);
 
 for i = 1:rows(games)
   team1 = games(i, 3);

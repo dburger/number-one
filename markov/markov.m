@@ -47,16 +47,19 @@ for i = 1:rows(S)
   t = sum(S(i, :));
   if (t > 0)
     S(i, :) *= 1 / t;
+  else
+    S(i, :) = 1 / numteams;
   endif
 endfor
 
 % To force stochasticity can introduce "teleportation matrix.
 % Here beta = .5 as suggested for NCAA basketball.
-S = 0.5 * S + (1 - 0.5) / numteams * ones(numteams);
+% S = 0.5 * S + (1 - 0.5) / numteams * ones(numteams);
 
 % Need to compute "stationary vector"  or "dominant eigenvector" of
 % S. This is stolen from
 % http://stackoverflow.com/questions/16888303/dtmc-markov-chain-how-to-get-the-stationary-vector
+
 r = [S' - eye(numteams); ones(1, numteams)] \ [zeros(numteams, 1); 1];
 
 num = 1:numteams;

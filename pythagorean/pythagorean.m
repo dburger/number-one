@@ -14,7 +14,7 @@
 % chapter four in
 % "Who's #1?: The Science of Rating and Ranking."
 
-% IMPORTANT!: The constant exponent below if for NFL
+% IMPORTANT!: The constant exponent below is for NFL
 % data. Different sports have different accepted
 % standard values.
 

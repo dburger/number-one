@@ -1,4 +1,4 @@
-#!/usr/bin/env octave
+#!/usr/bin/octave -qf
 
 % Computes Colley rankings on data as downloaded
 % from http://www.masseyratings.com/data.php
