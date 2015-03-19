@@ -32,9 +32,9 @@ endfor
 
 for i = 1:rows(C)
   t = sum(C(i, :));
-  b(i, 1) /= -t;
-  C(i, :) /= t;
-  C(i, i) = -1;
+  b(i, 1) /= t;
+  C(i, :) /= -t;
+  C(i, i) = 1;
 endfor
 
 r = C \ b;
