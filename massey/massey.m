@@ -18,10 +18,11 @@ args = argv();
 
 games = csvread(args{1});
 # Deprecated:
-# teams = textread(args{2}, '%*d,%s');
-fid = fopen(args{2}, 'r')
-teams = textscan(fid, '%*d,%s'){1};
-fclose(fid)
+teams = textread(args{2}, '%*d,%s');
+# Can switch to this, but it drops some crap in the stdout.
+## fid = fopen(args{2}, 'r')
+## teams = textscan(fid, '%*d,%s'){1};
+## fclose(fid)
 
 numteams = max(max(games(:,3)), max(games(:,6)));
 
@@ -51,7 +52,6 @@ for i = 1:rows(games)
   p(team1, 1) += diff;
   p(team2, 1) -= diff;
 endfor
-
 
 T = diag(diag(M), numteams, numteams);
 P = -1 * (M - T);
