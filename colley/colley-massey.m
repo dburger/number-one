@@ -17,7 +17,11 @@
 args = argv();
 
 games = csvread(args{1});
-teams = textread(args{2}, '%*d,%s');
+% Deprecated.
+% teams = textread(args{2}, '%*d,%s');
+fid = fopen(args{2}, 'r');
+teams = textscan(fid, '%*d,%s'){1};
+fclose(fid);
 
 numteams = max(max(games(:,3)), max(games(:,6)));
 
