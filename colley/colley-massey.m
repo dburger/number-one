@@ -61,7 +61,7 @@ r = C \ p;
 T = diag(diag(C), numteams, numteams);
 P = -1 * (C - T);
 
-d = (T + P) \ (T * r - f)
+d = (T + P) \ (T * r - f);
 o = r - d;
 
 num = 1:numteams;
