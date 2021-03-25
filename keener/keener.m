@@ -26,7 +26,10 @@ teams = textread(args{2}, '%*d,%s');
 
 numteams = max(max(games(:,3)), max(games(:,6)));
 
+% Will hold the stat we are tracking.
 A = zeros(numteams);
+% Will hold the game counts between teams.
+G = zeros(numteams);
 
 for i = 1:rows(games)
   team1 = games(i, 3);
@@ -37,12 +40,14 @@ for i = 1:rows(games)
 
   A(team1, team2) += score1;
   A(team2, team1) += score2;
+  G(team1, team2) += 1;
+  G(team2, team1) += 1;
 endfor
 
 % T used as temporary matrix to calculate the adjustments.
 T = zeros(numteams);
 
-% Laplace's rule of succession adjusment.
+% Laplace's rule of succession adjustment.
 for i = 1:rows(A)
   for j = 1:columns(A)
     T(i, j) = (A(i, j) + 1) / (A(i, j) + A(j, i) + 2);
@@ -60,6 +65,16 @@ for i = 1:rows(A)
 endfor
 
 A = T;
+
+% This seems to make things worse for NBA. Note that the book talks
+% about this not being helpful when you have already done a skewing
+% adjustment and the number of games is already similar.
+% Number of games adjustment.
+% A = A ./ G;
+% A(isnan(A)|isinf(A)) = 0;
+
+% Perturbation, could be helpful to force irreducibility and primitivty.
+% A = A + (0.0001 * (ones(numteams, 1) * ones(1, numteams)))
 
 % Power method, note that if you needed to force irreducibility
 % or primitivity you need to adjust this approach. This shouldn't
