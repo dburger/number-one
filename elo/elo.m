@@ -21,6 +21,10 @@
 %          epsilon:  400
 %                K:   20
 
+% Prevent octave from thinking this is a function file by
+% having the first statement not be "function".
+1;
+
 function retval = STARTING_RATING()
   retval = 1500;
 endfunction
