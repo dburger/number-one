@@ -85,7 +85,7 @@ num = num';
 
 elos = sortrows([num elos], -2);
 
-printf('rankings: =====================================\n')
+printf('Overall rankings: =====================================\n')
 for i = 1:rows(elos)
   printf('%d %s %f\n', i, teams{elos(i,1)}, elos(i,2))
 endfor
