@@ -21,7 +21,10 @@ teams = textread(args{2}, '%*d,%s');
 
 numteams = max(max(games(:,3)), max(games(:,6)));
 
+% Wins tracked in matrix 1.
 S = zeros(numteams, numteams);
+% Points given up tracked in matrix 2.
+S(:, :, 2) = zeros(numteams, numteams);
 
 for i = 1:rows(games)
   team1 = games(i, 3);
@@ -30,37 +33,52 @@ for i = 1:rows(games)
   score1 = games(i, 5);
   score2 = games(i, 8);
 
-  % Using wins, the loser "votes for" the winner.
-  % A more advanced system would combine several stats.
+  % In matrix 1, using wins, the loser "votes for" the winner.
   if (score1 > score2)
-    S(team2, team1) += 1;
+    S(team2, team1, 1) += 1;
   elseif (score2 > score1)
-    S(team1, team2) += 1;
+    S(team1, team2, 1) += 1;
   else
-    S(team2, team1) += 0.5;
-    S(team1, team2) += 0.5;
+    S(team2, team1, 1) += 0.5;
+    S(team1, team2, 1) += 0.5;
   endif
+
+  % In matrix 2, using scores, a team votes for the other team
+  % with how many points it gave up to that team.
+  S(team2, team1, 2) += score1;
+  S(team1, team2, 2) += score2;
 endfor
 
 % Normalize the rows.
-for i = 1:rows(S)
-  t = sum(S(i, :));
-  if (t > 0)
-    S(i, :) *= 1 / t;
-  else
-    S(i, :) = 1 / numteams;
-  endif
+for i = 1:2
+  for j = 1:rows(S(:, :, i))
+    t = sum(S(j, :, i));
+    if (t > 0)
+      S(j, :, i) *= 1 / t;
+    else
+      S(j, :, i) = 1 / numteams;
+    endif
+  endfor
 endfor
 
 % To force stochasticity can introduce "teleportation matrix.
 % Here beta = .5 as suggested for NCAA basketball.
 % S = 0.5 * S + (1 - 0.5) / numteams * ones(numteams);
 
+% Aggregate the different stats matrices down into a single
+% aggregated matrix.
+A = zeros(numteams, numteams);
+for i = 1:2
+  % Perhaps the combination weighting should not be 0.5 here.
+  % For example, perhaps wins is more important than points.
+  A = A + 0.5 * S(:, :, i);
+endfor
+
 % Need to compute "stationary vector"  or "dominant eigenvector" of
 % S. This is stolen from
 % http://stackoverflow.com/questions/16888303/dtmc-markov-chain-how-to-get-the-stationary-vector
 
-r = [S' - eye(numteams); ones(1, numteams)] \ [zeros(numteams, 1); 1];
+r = [A' - eye(numteams); ones(1, numteams)] \ [zeros(numteams, 1); 1];
 
 num = 1:numteams;
 num = num';
