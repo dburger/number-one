@@ -56,14 +56,13 @@ for i = 1:2
     if (t > 0)
       S(j, :, i) *= 1 / t;
     else
-      S(j, :, i) = 1 / numteams;
+      % No losses, could evenly vote for any team including itself
+      % S(j, :, i) = 1 / numteams;
+      % or here, we vote only for thyself.
+      S(j, j, i) = 1;
     endif
   endfor
 endfor
-
-% To force stochasticity can introduce "teleportation matrix.
-% Here beta = .5 as suggested for NCAA basketball.
-% S = 0.5 * S + (1 - 0.5) / numteams * ones(numteams);
 
 % Aggregate the different stats matrices down into a single
 % aggregated matrix.
@@ -73,6 +72,14 @@ for i = 1:2
   % For example, perhaps wins is more important than points.
   A = A + 0.5 * S(:, :, i);
 endfor
+
+% To force stochasticity can introduce "teleportation matrix."
+% Here beta = .5 as suggested for NCAA basketball.
+% This should not be necessary unless you have stats that result
+% in a row of zeros. For example, wins are votes for other teams
+% and you have an undefeated team.
+% beta = 0.5
+% A = beta * A + (1.0 - beta) / numteams * ones(numteams, numteams);
 
 % Need to compute "stationary vector"  or "dominant eigenvector" of
 % S. This is stolen from
