@@ -50,7 +50,7 @@ A = A + epsilon * (ones(numteams) - eye(numteams));
 
 % Calculate the defensive ratings, how many times to converge?
 d = ones(numteams, 1);
-for i = 1:9
+for i = 1:100
   d = A * (1 ./ (A' * (1 ./ d)));
 endfor
 
@@ -63,7 +63,7 @@ num = num';
 
 r = sortrows([num r], -2);
 o = sortrows([num o], -2);
-d = sortrows([num d], -2);
+d = sortrows([num d], 2);
 
 function output(type, rankings, teams)
   printf('%s rankings: =====================================\n', type)
@@ -80,4 +80,4 @@ output('Defense', d, teams);
 
 % Book proposes building regression models in the form of:
 % alpha(o1 - o2) + beta(d1 - d2) = s1 - s2
-% from these offensives and defensive ratings, go nuts.
+% from these offensive and defensive ratings, go nuts.
