@@ -81,3 +81,27 @@ output('Defense', d, teams);
 % Book proposes building regression models in the form of:
 % alpha(o1 - o2) + beta(d1 - d2) = s1 - s2
 % from these offensive and defensive ratings, go nuts.
+
+ranks = [];
+diffs = [];
+
+for i = 1:rows(games)
+  team1 = games(i, 3);
+  team2 = games(i, 6);
+
+  score1 = games(i, 5);
+  score2 = games(i, 8);
+
+  rank1 = o(team1, 2) - o(team2, 2);
+  rank2 = d(team1, 2) - d(team2, 2);
+  diff = score1 - score2;
+
+  ranks = [ranks; [rank1 rank2]];
+  diffs = [diffs; [diff]];
+endfor
+
+B = ranks \ diffs;
+
+printf("\nRegression, alpha(o diff) + beta(d diff) = spread\n");
+printf("alpha %d\n", B(1,1));
+printf("beta  %d\n", B(2,1));
