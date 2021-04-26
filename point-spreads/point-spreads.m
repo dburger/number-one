@@ -54,7 +54,7 @@ r = K * e / n;
 num = 1:numteams;
 num = num';
 
-r = sortrows([num r], -2);
+# r = sortrows([num r], -2);
 
 function output(type, rankings, teams)
   printf('%s rankings: =====================================\n', type)
@@ -63,4 +63,32 @@ function output(type, rankings, teams)
   endfor
 endfunction
 
-output('Overall', r, teams);
+output('Overall', sortrows([num r], -2), teams);
+
+# Compute the home team advantage with a linear regression.
+A = [];
+b = [];
+
+for i = 1:rows(games)
+  home1 = games(i, 4);
+  home2 = games(i, 7);
+  if (home1 == 1)
+    team1 = games(i, 3);
+    team2 = games(i, 6);
+    diff = games(i, 5) - games(i, 8);
+  elseif (home2 == 1)
+    team1 = games(i, 6);
+    team2 = games(i, 3);
+    diff = games(i, 8) - games(i, 5);
+  else
+    continue;
+  endif
+  rating1 = r(team1, 1);
+  rating2 = r(team2, 1);
+  A = [A; [1 rating1 rating2]];
+  b = [b; [diff]];
+endfor
+
+x = A \ b;
+
+printf("diff = %d + %d*hr + %d*ar\n", x(1, 1), x(2, 1), x(3, 1));
