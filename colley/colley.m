@@ -41,13 +41,16 @@ for i = 1:rows(games)
   C(team2, team2) += 1;
 
   diff = score1 - score2;
+
   if (diff > 0)
     b(team1, 1) += 1;
     b(team2, 1) -= 1;
-  else
+  elseif (diff < 0)
     b(team1, 1) -= 1;
     b(team2, 1) += 1;
   endif
+  % if (diff == 0) no change to b is necessary, as we conceptually count it as
+  % 1/2 win and 1/2 loss for each team
 endfor
 
 b /= 2;
